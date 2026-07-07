@@ -10,18 +10,18 @@ helps identify the most rewarding skills to acquire or improve
 */
 
 SELECT
-round(avg(salary_year_avg),0) as salary_avg,
-skills
+    round(avg(salary_year_avg),0) as salary_avg,
+    skills
 from job_postings_fact
 join skills_job_dim
 on job_postings_fact.job_id = skills_job_dim.job_id
 join skills_dim
 ON skills_job_dim.skill_id = skills_dim.skill_id
-where job_title_short = 'Data Analyst'
-AND salary_year_avg is not NULL
-group by skills
-order by salary_avg desc
-limit 25 
+    where job_title_short = 'Data Analyst'
+    AND salary_year_avg is not NULL
+    group by skills
+    order by salary_avg desc
+    limit 25 
 
 /*
 Insights

@@ -6,36 +6,35 @@ helping job seekers to undertand which skills to develop that aligns with
 top salaries
 */
 
-with top_paying_jobs as 
-(
-    select
-    j.job_id,
-    j.job_title,
-    j.job_location,
-    j.job_schedule_type,
-    j.job_posted_date,
-    j.Salary_year_avg,
-    c.name as company_name
-    from job_postings_fact j 
-    join company_dim c
-    on j.company_id = c.company_id
-    where  j.job_title_short = 'Data Analyst'
-    and salary_year_avg is not null
-    and j.job_work_from_home = TRUE
-    Order by j.salary_year_avg DESC
-    limit 10 
+WITH top_paying_jobs AS (
+    SELECT
+        j.job_id,
+        j.job_title,
+        j.job_location,
+        j.job_schedule_type,
+        j.job_posted_date,
+        j.salary_year_avg,
+        c.name AS company_name
+    FROM job_postings_fact AS j
+    JOIN company_dim AS c
+        ON j.company_id = c.company_id
+    WHERE j.job_title_short = 'Data Analyst'
+        AND j.salary_year_avg IS NOT NULL
+        AND j.job_work_from_home = TRUE
+    ORDER BY j.salary_year_avg DESC
+    LIMIT 10
 )
 
-select
-top_paying_jobs.*,
-skills
-from top_paying_jobs
-join skills_job_dim
-on top_paying_jobs.job_id = skills_job_dim.job_id
-join skills_dim
-on skills_job_dim.skill_id = skills_dim.skill_id
-order by salary_year_avg desc
-
+SELECT
+    tpj.*,
+    sd.skills
+FROM top_paying_jobs AS tpj
+JOIN skills_job_dim AS sjd
+    ON tpj.job_id = sjd.job_id
+JOIN skills_dim AS sd
+    ON sjd.skill_id = sd.skill_id
+ORDER BY
+    tpj.salary_year_avg DESC;
 
 /* Top Skills by Frequency
 Rank	Skill	Appears In
